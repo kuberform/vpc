@@ -2,7 +2,7 @@ resource "aws_vpn_gateway" "main" {
   vpc_id = "${aws_vpc.main.id}"
 
   tags {
-    Name     = "kuberform-route-private"
+    Name     = "kuberform-route-vgw"
     Owner    = "infrastructure"
     Billing  = "costcenter"
     Provider = "https://github.com/kuberform"
@@ -13,30 +13,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = "${aws_vpc.main.id}"
 
   tags {
-    Name     = "kuberform-route-default"
-    Owner    = "infrastructure"
-    Billing  = "costcenter"
-    Provider = "https://github.com/kuberform"
-  }
-}
-
-resource "aws_eip" "nat-gw" {
-  vpc = true
-
-  tags {
-    Name     = "kuberform-natgw-eip"
-    Owner    = "infrastructure"
-    Billing  = "costcenter"
-    Provider = "https://github.com/kuberform"
-  }
-}
-
-resource "aws_nat_gateway" "nat-gw" {
-  allocation_id = "${aws_eip.nat-gw.id}"
-  subnet_id     = "${aws_subnet.bastion.*.id[0]}"
-
-  tags {
-    Name     = "kuberform-nat-gw"
+    Name     = "kuberform-route-igw"
     Owner    = "infrastructure"
     Billing  = "costcenter"
     Provider = "https://github.com/kuberform"
@@ -125,21 +102,6 @@ resource "aws_route_table" "public" {
 
   tags {
     Name     = "kuberform-route-public"
-    Owner    = "infrastructure"
-    Billing  = "costcenter"
-    Provider = "https://github.com/kuberform"
-  }
-}
-
-resource "aws_route_table" "private" {
-  vpc_id = "${aws_vpc.main.id}"
-
-  propagating_vgws = [
-    "${aws_vpn_gateway.main.id}",
-  ]
-
-  tags {
-    Name     = "kuberform-route-private"
     Owner    = "infrastructure"
     Billing  = "costcenter"
     Provider = "https://github.com/kuberform"
