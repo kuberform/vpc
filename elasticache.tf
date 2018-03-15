@@ -19,7 +19,7 @@ resource "aws_subnet" "elasticache" {
 resource "aws_route_table_association" "elasticache" {
   count          = "${length(data.aws_availability_zones.available.names)}"
   subnet_id      = "${element(aws_subnet.elasticache.*.id, count.index)}"
-  route_table_id = "${aws_route_table.private.id}"
+  route_table_id = "${aws_route_table.public.id}"
 }
 
 resource "aws_security_group" "elasticache" {
